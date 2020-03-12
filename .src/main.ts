@@ -20,9 +20,8 @@ function doPost(e: string) {
     
     let punchKey: string = '';
     if (arg.length > 0) {
-        for (let i=0; i < arg.length; i++) {
-            punchKey += arg[i];
-        }
+        let tmpAry:string[] = arg.split(' ');
+        punchKey = tmpAry[0]
     }
 
     let replyMessageToChatwork: string = '';
