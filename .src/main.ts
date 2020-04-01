@@ -8,6 +8,7 @@ const PUNCHOUT_MESSAGE_SLACK: string = PropertiesService.getScriptProperties().g
 const PUNCHOUT_MESSAGE_CHATWORK: string = PropertiesService.getScriptProperties().getProperty('PUNCHOUT_MESSAGE_CHATWORK');
 const CHATWORK_API_TOKEN: string = PropertiesService.getScriptProperties().getProperty('CHATWORK_API_TOKEN');
 const CHATWORK_ROOMID: string = PropertiesService.getScriptProperties().getProperty('CHATWORK_ROOMID');
+const CHATWORK_ROOMURL: string = PropertiesService.getScriptProperties().getProperty('CHATWORK_ROOMURL');
 const KEYWORDERRORCOMMENT: string = PropertiesService.getScriptProperties().getProperty('KEYWORDERRORCOMMENT');
 
 function doPost(e: string) {
@@ -16,7 +17,7 @@ function doPost(e: string) {
         throw new Error('Invalid Token');
     }
     
-    let arg: string = e.parameter.text.replace('　', ' ').trim();
+    let arg: string = e.parameter.text.replace(/　/g, ' ').trim();
     
     let punchKey: string = '';
     if (arg.length > 0) {
@@ -28,10 +29,12 @@ function doPost(e: string) {
     let replyMessageToSLACK: string = '';
     if (punchKey === PUNCHIN_KEY) {
         replyMessageToChatwork = PUNCHIN_MESSAGE_CHATWORK;
-        replyMessageToSLACK = PUNCHIN_MESSAGE_SLACK;
+        replyMessageToSLACK = `${ PUNCHIN_MESSAGE_SLACK }\n ${ CHATWORK_ROOMURL + CHATWORK_ROOMID }`;
+
     } else if (punchKey === PUNCHOUT_KEY) {
         replyMessageToChatwork = PUNCHOUT_MESSAGE_CHATWORK;
-        replyMessageToSLACK = PUNCHOUT_MESSAGE_SLACK;
+        replyMessageToSLACK = `${ PUNCHOUT_MESSAGE_SLACK }\n ${ CHATWORK_ROOMURL + CHATWORK_ROOMID }`;
+
     } else {
         replyMessageToSLACK = KEYWORDERRORCOMMENT;
     }
